@@ -278,6 +278,16 @@ var citizen = function(){
 		backgroundColor:'#ffffff',
 		height:30,
 	});	
+	
+	var submit = Ti.UI.createButton({
+		title:'Enviar',
+		color:'#3f3f3f',
+		font:{
+  			fontSize:20,
+  			fontFamily: 'KelsonSans-Bold'
+  		},
+  		top:20
+	});
 	var cancel =  Titanium.UI.createButton({
 		title:'Cancelar',
 		style:Titanium.UI.iPhone.SystemButtonStyle.BORDERED
@@ -341,6 +351,7 @@ var citizen = function(){
 	mapWindowScroll.add(textField);
 	mapWindowScroll.add(imagesLabelWrapper);
 	mapWindowScroll.add(imagesWrapper);
+	mapWindowScroll.add(submit);
 	mapWindowScroll.add(footerSeparator);
 	//mapWindowScroll.add(bodyNode);
 	self.add(mapWindowScroll);
@@ -349,6 +360,11 @@ var citizen = function(){
 	self.open();
 	
 	//-------------------------------- EVENT LISTENERS --------------------------//
+	submit.addEventListener('click', function(){
+		Ti.include('lib/reporte.js');
+		createReport();
+		
+	});
 	addImageOne.addEventListener('click', function(e) {
 		Ti.Media.openPhotoGallery({
 			success:function(e){
