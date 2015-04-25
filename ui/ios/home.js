@@ -21,6 +21,15 @@ var home = function(){
 		height:44,
 		left:0
 	});
+	var actInd = Titanium.UI.createActivityIndicator({
+		top:10,
+		height:50,
+		style:Titanium.UI.iPhone.ActivityIndicatorStyle.DARK,
+		font: {fontSize:15,fontWeight:'bold'},
+		color: '#555555',
+		message: 'Cargando...',
+		width: 210
+	});
 	var homeWindowScroll = Ti.UI.createScrollView({
 		backgroundColor:'transparent',
 		layout:'vertical',
@@ -52,14 +61,16 @@ var home = function(){
 		width:'100%',
 		height:40,
 		layout:'horizontal',
-		backgroundColor:'transparent'
+		backgroundColor:'transparent',
+		visible:false
 	});
 	var separatorVideos = Ti.UI.createView({
 		width:'100%',
 		height:40,
 		layout:'horizontal',
 		top:10,
-		backgroundColor:'transparent'
+		backgroundColor:'transparent',
+		visible:false
 	});
 	var redLeftDeco = Ti.UI.createView({
 		width:10,
@@ -115,6 +126,7 @@ var home = function(){
 		backgroundColor:'#f1f2f2',
 		height:Ti.UI.SIZE
 	});
+	actInd.show();
 	separatorNoticias.add(redLeftDeco);
 	separatorNoticias.add(separatorNoticiasLabel);
 	separatorNoticias.add(redRightDeco);
@@ -127,15 +139,17 @@ var home = function(){
 	homeWindowScroll.add(separatorVideos);
 	homeWindowScroll.add(enVideoWrapper);
 	self.setTitleControl(logo);
+	self.add(actInd);
 	self.add(homeWindowScroll);
-	self.open();
+	//self.open();
 	//----------------------------------  N A V   G R O U P   H O M E   W I N D O W  ----------------------------------//
 	var selfController =  Ti.UI.iOS.createNavigationWindow({
 		window : self
 	});
 	
 	//--------------------------------  E V E N T  L I S T E N E R  T I T U L A R E S  ---------------------------------//
-	Ti.App.addEventListener('buildTitulares', function(data){ 
+	Ti.App.addEventListener('buildTitulares', function(data){
+		self.remove(actInd); 
     	var name = data.name;
 		Ti.include('lib/getImage.js');
 		var imageWrapper = [];
@@ -186,6 +200,10 @@ var home = function(){
 			imageWrapper[i].add(articleTitle[i]);
 			imageWrapper[i].add(articleDate[i]);
 			imagesScroll.addView(imageWrapper[i]);
+			imageWrapper[i].addEventListener('click' , function(e){
+				var row = e.source;
+				Ti.App.fireEvent('openNode', {id:row.nodeID});
+			});
 		}//end for loop
 	});//End EventListener buildTitulares
 	
@@ -284,6 +302,7 @@ var home = function(){
 				var row = e.source;
 				Ti.App.fireEvent('openNode', {id:row.nodeID});
 			});
+			separatorNoticias.visible = true;
 		}//end for loop
 		
 	});//End EventListener buildMasNoticias
@@ -364,6 +383,7 @@ var home = function(){
 				var row = e.source;
 				Ti.App.fireEvent('openVideo', {id:row.video});
 			});
+			separatorVideos.visible = true;
 		}//end for loop
 	});//End EventListener buildVideos
 	Ti.App.addEventListener('openVideo', function(data){

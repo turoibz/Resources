@@ -10,7 +10,11 @@ var video = function(){
 		text : 'Video'
 	});
 	self.add(label);
-	self.open();
+	//self.open();
+	
+	//Ti.App.addEventListener('openVideoWindow', function(data){ 
+	//	self.open();
+	//});
 	//----------------------------------  N A V   G R O U P   V I D E O   W I N D O W  ----------------------------------//
 	var selfController =  Ti.UI.iOS.createNavigationWindow({
 		window : self

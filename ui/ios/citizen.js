@@ -1,14 +1,18 @@
-var citizen = function(){
+function citizen(){
 	//-------------------------  R E P O R T E    C I U D A D A N O   W I N D O W   B U I L D  ---------------------------------//
+	var imagesNode = [];
+	var mapLatitude;
+	var mapLongitude;
 	var MapModule = require('ti.map');
 	var ImageFactory = require('ti.imagefactory');
 	var leftBtn = Ti.UI.createButton({
 		//title:"MENU",
 		backgroundColor:'transparent',
-		backgroundImage:'images/menuButton.png'
+		backgroundImage:'images/closeWindow.png',
+		height:50
 	});
 	leftBtn.addEventListener("click", function(){
-		drawer.toggleLeftWindow();
+		selfController.close();
 	});
 	var mapWindowScroll = Ti.UI.createScrollView({
 		backgroundColor:'transparent',
@@ -334,6 +338,8 @@ var citizen = function(){
 		backgroundColor:'#ffffff',
 		barColor:'#ffffff',
 		leftNavButton: leftBtn,
+		modal:true,
+    	navBarHidden: false // always show nav bar
 	});
 	var logo = Ti.UI.createImageView({
 		image:'images/logoWinCitizen.png',
@@ -357,13 +363,13 @@ var citizen = function(){
 	self.add(mapWindowScroll);
 	self.add(picker_view);
 	self.setTitleControl(logo);
-	self.open();
+	//self.open();
 	
 	//-------------------------------- EVENT LISTENERS --------------------------//
 	submit.addEventListener('click', function(){
 		Ti.include('lib/reporte.js');
-		createReport();
-		
+		var body = textfield.value;
+		postReporte(imagesNode, body, mapLongitude, mapLatitude);
 	});
 	addImageOne.addEventListener('click', function(e) {
 		Ti.Media.openPhotoGallery({
@@ -374,8 +380,9 @@ var citizen = function(){
 					fileImageOne.deleteFile();
 				}
 				fileImageOne.createFile();
-				var fileImageOneSmall = ImageFactory.imageAsResized(e.media, { width:600, height:600, quality:ImageFactory.QUALITY_MEDIUM });
-				fileImageOne.write(fileImageOneSmall);
+				var fileImageOneSmall = ImageFactory.imageAsResized(e.media, { width:600, height:600 });
+				var fileImageOneSmallCompress = ImageFactory.compress( fileImageOneSmall, 0.50 ); 
+				fileImageOne.write(fileImageOneSmallCompress);
 				var fileContent = fileImageOne.read();
 				var thumbnailOne = ImageFactory.imageAsResized(fileContent, { width:75, height:75, quality:ImageFactory.QUALITY_MEDIUM });
 				var imageOne = Ti.UI.createImageView({
@@ -384,8 +391,7 @@ var citizen = function(){
 					height:75,
 				});
 				imageOneWrapper.add(imageOne);
-				var imgStr = Ti.Utils.base64encode(fileContent.toString());
-				alert(imgStr.toString());
+				imagesNode.push("imageOne");
 			},
 			error:function(e){
 				alert('There was a problem');
@@ -407,8 +413,9 @@ var citizen = function(){
 					fileImageTwo.deleteFile();
 				}
 				fileImageTwo.createFile();
-				var fileImageTwoSmall = ImageFactory.imageAsResized(e.media, { width:600, height:600, quality:ImageFactory.QUALITY_MEDIUM });
-				fileImageTwo.write(fileImageTwoSmall);
+				var fileImageTwoSmall = ImageFactory.imageAsResized(e.media, { width:600, height:600 });
+				var fileImageTwoSmallCompress = ImageFactory.compress( fileImageTwoSmall, 0.50 ); 
+				fileImageTwo.write(fileImageTwoSmallCompress);
 				var fileContent = fileImageTwo.read();
 				var thumbnailTwo = ImageFactory.imageAsResized(fileContent, { width:75, height:75, quality:ImageFactory.QUALITY_MEDIUM });
 				var imageTwo = Ti.UI.createImageView({
@@ -417,6 +424,7 @@ var citizen = function(){
 					height:75,
 				});
 				imageTwoWrapper.add(imageTwo);
+				imagesNode.push("imageTwo");
 			},
 			error:function(e){
 				alert('There was a problem');
@@ -438,8 +446,9 @@ var citizen = function(){
 					fileImageThree.deleteFile();
 				}
 				fileImageThree.createFile();
-				var fileImageThreeSmall = ImageFactory.imageAsResized(e.media, { width:600, height:600, quality:ImageFactory.QUALITY_MEDIUM });
-				fileImageThree.write(fileImageThreeSmall);
+				var fileImageThreeSmall = ImageFactory.imageAsResized(e.media, { width:600, height:600 });
+				var fileImageThreeSmallCompress = ImageFactory.compress( fileImageThreeSmall, 0.50 ); 
+				fileImageThree.write(fileImageThreeSmallCompress);
 				var fileContent = fileImageThree.read();
 				var thumbnailThree = ImageFactory.imageAsResized(fileContent, { width:75, height:75, quality:ImageFactory.QUALITY_MEDIUM });
 				var imageThree = Ti.UI.createImageView({
@@ -448,6 +457,7 @@ var citizen = function(){
 					height:75,
 				});
 				imageThreeWrapper.add(imageThree);
+				imagesNode.push("imageThree");
 			},
 			error:function(e){
 				alert('There was a problem');
@@ -469,8 +479,9 @@ var citizen = function(){
 					fileImageFour.deleteFile();
 				}
 				fileImageFour.createFile();
-				var fileImageFourSmall = ImageFactory.imageAsResized(e.media, { width:600, height:600, quality:ImageFactory.QUALITY_MEDIUM });
-				fileImageFour.write(fileImageFourSmall);
+				var fileImageFourSmall = ImageFactory.imageAsResized(e.media, { width:600, height:600 });
+				var fileImageFourSmallCompress = ImageFactory.compress( fileImageFourSmall, 0.50 ); 
+				fileImageFour.write(fileImageFourSmallCompress);
 				var fileContent = fileImageFour.read();
 				var thumbnailFour = ImageFactory.imageAsResized(fileContent, { width:75, height:75, quality:ImageFactory.QUALITY_MEDIUM });
 				var imageFour = Ti.UI.createImageView({
@@ -479,6 +490,7 @@ var citizen = function(){
 					height:75,
 				});
 				imageFourWrapper.add(imageFour);
+				imagesNode.push("imageFour");
 			},
 			error:function(e){
 				alert('There was a problem');
@@ -503,17 +515,17 @@ var citizen = function(){
 	});
 	map1.addEventListener('longpress', function(e) {
 		map1.removeAllAnnotations();
-		Ti.API.info('longpress');
-		Ti.API.info(e);
+		//Ti.API.info('longpress');
+		//Ti.API.info(e);
 		var coordinate = calculateLatLngfromPixels(map1, e.x, e.y);
-		var longitude = coordinate.lon;
-    	var latitude = coordinate.lat;
-    	Ti.API.info(longitude);
-    	Ti.API.info(latitude);
+	 	mapLongitude = coordinate.lon;
+    	mapLatitude = coordinate.lat;
+    	//Ti.API.info(longitude);
+    	//Ti.API.info(latitude);
     	//alert('You pressed at coordinates ' + latitude + ' / ' + longitude);
     	var appc = MapModule.createAnnotation({
-    		latitude: latitude,
-    		longitude: longitude,
+    		latitude: mapLatitude,
+    		longitude: mapLongitude,
     		title: 'Nuevo Reporte',
     		animate: true,
     		pincolor: MapModule.ANNOTATION_RED,
@@ -542,7 +554,8 @@ var citizen = function(){
 	};
 	//------------------------------  N A V   G R O U P   R E P O R T E   W I N D O W  ----------------------------------//
 	var selfController =  Ti.UI.iOS.createNavigationWindow({
-		window : self
+		window : self,
+		modal: true
 	});
 	return selfController;
 };

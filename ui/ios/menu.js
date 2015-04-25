@@ -64,11 +64,15 @@ var menu = function(){
 				drawer.toggleLeftWindow();
 				break;
 			case 4:
+				var video = require('ui/ios/video');
+				var videoWindow = video();
 				drawer.setCenterWindow(videoWindow);
 				drawer.toggleLeftWindow();
 				break;
 			case 5:
-				drawer.setCenterWindow(citizenWindow);
+				var map = require('ui/ios/map');
+				var mapWindow = map();
+				drawer.setCenterWindow(mapWindow);
 				drawer.toggleLeftWindow();
 				break;
 		}

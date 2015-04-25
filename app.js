@@ -73,6 +73,7 @@ function loadAPIData(url, type){
 					});
 				}//end for loop
 				Ti.App.fireEvent('buildVideos', {name:'bar'});
+				Ti.App.fireEvent('openVideoWindow', {name:'bar'});
 			}//end if xhr.responseText != videosAPI
 		}//end else if type == 'videos'
 	};//End function onload;
@@ -96,10 +97,7 @@ var home = require('ui/ios/home');
 var mainWindow = home();
 var menu = require('ui/ios/menu');
 var menuWindow = menu();
-var video = require('ui/ios/video');
-var videoWindow = video();
-var citizen = require('ui/ios/citizen');
-var citizenWindow = citizen();
+
 var drawer = NappDrawerModule.createDrawer({
 	leftWindow: menuWindow,
 	centerWindow: mainWindow,

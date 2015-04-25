@@ -60,6 +60,66 @@ var nodeImage = Ti.UI.createImageView({
 	touchEnabled:false,
 	width:'100%'
 });
+var nodeDate = Ti.UI.createLabel({
+	backgroundColor:'transparent',
+	touchEnabled:false,
+	font:{
+  		fontSize:13,
+  		fontFamily: 'CentraleSans-Thin'
+  	},
+	color:'#000000',
+	top:5,
+	left:0
+});
+var nodeAuthor = Ti.UI.createLabel({
+	backgroundColor:'transparent',
+	touchEnabled:false,
+	font:{
+  		fontSize:13,
+  		fontFamily: 'CentraleSans-Thin'
+  	},
+	color:'#000000',
+	top:3,
+	left:0
+});
+var metaData = Ti.UI.createView({
+	backgroundColor:'transparent',
+	touchEnabled:false,
+	layout:'vertical',
+	width:'65%',
+	height:Ti.UI.SIZE
+});
+metaData.add(nodeDate);
+metaData.add(nodeAuthor);
+var smallText = Ti.UI.createButton({
+	backgroundColor:'transparent',
+	backgroundImage:'images/smallText.png',
+	height:45,
+	width:45,
+});
+var bigText = Ti.UI.createButton({
+	backgroundColor:'transparent',
+	backgroundImage:'images/bigText.png',
+	height:45,
+	width:45,
+});
+var tools = Ti.UI.createView({
+	backgroundColor:'transparent',
+	layout:'horizontal',
+	width:'35%',
+	height:Ti.UI.SIZE,
+	visible:false
+});
+tools.add(smallText);
+tools.add(bigText);
+var metaTools = Ti.UI.createView({
+	backgroundColor:'transparent',
+	layout:'horizontal',
+	width:'90%',
+	height:Ti.UI.SIZE,
+}); 
+metaTools.add(metaData);
+metaTools.add(tools);
 var bodyNode = Ti.UI.createLabel({
 	width:'90%',
 	backgroundColor:'transparent',
@@ -69,10 +129,19 @@ var bodyNode = Ti.UI.createLabel({
   		fontFamily: 'PFDinTextPro-Light'
   	},
   	top:15,
-});	
+});
+var whiteSpace	= Ti.UI.createView({
+	backgroundColor:'transparent',
+	touchEnabled:false,
+	layout:'vertical',
+	width:'90%',
+	height:40,
+}); 
 nodeWindowScroll.add(nodeImage);
 nodeWindowScroll.add(titleLabel);
+nodeWindowScroll.add(metaTools);
 nodeWindowScroll.add(bodyNode);
+nodeWindowScroll.add(whiteSpace);
 //nodeWindowScroll.add(nodeWindowWrapper);
 actInd.show();
 self.add(actInd);	
@@ -100,9 +169,13 @@ Ti.App.addEventListener('buildNode', function(data){
 	//listFiles();
 	titleLabel.text = node.title;
 	bodyNode.text = node.body;	
+	nodeDate.text = timeConverter(node.date);
+	nodeAuthor.text = node.author;
+	tools.visible = true;
 });
 self.addEventListener('close', function(e) {
     nodeWindowScroll.removeAllChildren();
+    tools.visible = false;
     Ti.API.info('Close event fired');
 });
 btnRight.addEventListener("click", function(){
@@ -116,6 +189,50 @@ btnRight.addEventListener("click", function(){
             //implement fallback sharing..
 	}
 });
+
+bigText.addEventListener("click", function(){
+	var textSize = bodyNode.font.fontSize;
+	if (textSize < 24){
+		textSize = textSize + 2;
+		bodyNode.font = {fontSize:textSize, fontFamily: 'PFDinTextPro-Light'};
+	}
+	else {
+            //implement fallback sharing..
+	}
+});
+smallText.addEventListener("click", function(){
+	var textSize = bodyNode.font.fontSize;
+	if (textSize > 18){
+		textSize = textSize - 2;
+		bodyNode.font = {fontSize:textSize, fontFamily: 'PFDinTextPro-Light'};
+	}
+	else {
+            //implement fallback sharing..
+	}
+});
+
+
+function timeConverter(UNIX_timestamp){
+  var a = new Date(UNIX_timestamp*1000);
+  var months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var hour = a.getHours();
+  var h = hour;
+  var dd = " am";
+  if (h >= 12) {
+	h = hour-12;
+    dd = " pm";
+  }
+  if (h == 0) {
+  	h = 12;
+  }
+  var min = a.getMinutes() < 10 ? '0' + a.getMinutes() : a.getMinutes();
+  var time = date + ' ' + month + ' ' + year + ' - ' + h + ':' + min + dd;
+  return time;
+}
+
 
 function listFiles(){
 	var resourcesDir = Titanium.Filesystem.getApplicationDataDirectory();
