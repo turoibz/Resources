@@ -12,7 +12,7 @@ function citizen(){
 		height:50
 	});
 	leftBtn.addEventListener("click", function(){
-		selfController.close();
+		Ti.App.fireEvent('closeCitizenWindow');
 	});
 	var mapWindowScroll = Ti.UI.createScrollView({
 		backgroundColor:'transparent',
@@ -62,7 +62,7 @@ function citizen(){
     	animate: true,
     	region: {latitude: 24.02529, longitude: -104.670709, latitudeDelta: .05, longitudeDelta: .05 },
     	height: Ti.Platform.displayCaps.platformHeight/2.5,
-    	width:300,
+    	width:'95%',
     	top: 5,
 	});
 	
@@ -106,7 +106,7 @@ function citizen(){
     	borderColor : '#848484',
     	suppressReturn:false,
     	top : 5,
-    	width : 300, height : 120,
+    	width : '95%', height : 120,
     	font : {
   			fontSize:15,
   			fontFamily: 'PFDinTextPro-Light'
@@ -536,6 +536,9 @@ function citizen(){
 	});
 	self.addEventListener("click", function(e){
         textfield.blur();
+    });
+    Ti.App.addEventListener('closeCitizenWindow', function(e){ 
+    	selfController.close();
     });
 	//-------------------------------- FUNCTION --------------------------//
 	var calculateLatLngfromPixels = function(mapview, xPixels, yPixels) {

@@ -168,7 +168,7 @@ Ti.App.addEventListener('buildNode', function(data){
 	//if(f.exists()) { Ti.API.info('file exists'); }
 	//listFiles();
 	titleLabel.text = node.title;
-	bodyNode.text = node.body;	
+	bodyNode.text = node.video;	
 	nodeDate.text = timeConverter(node.date);
 	nodeAuthor.text = node.author;
 	tools.visible = true;
