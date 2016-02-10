@@ -307,7 +307,7 @@ var home = function(){
 		
 	});//End EventListener buildMasNoticias
 	
-	//--------------------------------  E V E N T  L I S T E N E R  N O T I C I A S  ---------------------------------//
+	//--------------------------------  E V E N T  L I S T E N E R  V I D E O S  ---------------------------------//
 	Ti.App.addEventListener('buildVideos', function(data){ 
     	var name = data.name;
 		Ti.include('lib/getImage.js');

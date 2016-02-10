@@ -26,7 +26,7 @@ function loadAPIData(url, type){
 						title:data[i].title,
 						imageURL:imageFile,
 						//imageFileName:imageFile.slice(99,-14),
-						imageFileName:imageFile.slice(45),
+						imageFileName:imageFile.slice(68),
 						date:data[i].date,
 						nid:data[i].nid,
 						section:data[i].section
@@ -126,7 +126,7 @@ drawer.addEventListener('windowDidClose', function(e) {
 //-------------------------------------------- A P P  F I R S T  C A L L --------------------------------------------//
 
 drawer.open();
-loadAPIData('http://app.canal10.com.mx/api/home/titulares','titulares');
+loadAPIData('http://api.canal10.com.mx/api/home/titulares','titulares');
 loadAPIData('http://app.canal10.com.mx/api/home/noticias','noticias');
 loadAPIData('http://app.canal10.com.mx/api/videos','videos');
 Ti.API.info(Ti.Platform.displayCaps.platformHeight);
