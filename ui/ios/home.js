@@ -202,7 +202,8 @@ var home = function(){
 			imagesScroll.addView(imageWrapper[i]);
 			imageWrapper[i].addEventListener('click' , function(e){
 				var row = e.source;
-				Ti.App.fireEvent('openNode', {id:row.nodeID});
+				alert(row.nodeID);
+				//Ti.App.fireEvent('openNode', {id:row.nodeID});
 			});
 		}//end for loop
 	});//End EventListener buildTitulares
@@ -300,7 +301,7 @@ var home = function(){
 			masNoticiasWrapper.add(row[i]);
 			row[i].addEventListener('click' , function(e){
 				var row = e.source;
-				Ti.App.fireEvent('openNode', {id:row.nodeID});
+				//Ti.App.fireEvent('openNode', {id:row.nodeID});
 			});
 			separatorNoticias.visible = true;
 		}//end for loop

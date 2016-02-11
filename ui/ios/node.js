@@ -39,6 +39,7 @@ var nodeWindowWrapper = Ti.UI.createView({
 	layout:'vertical',
 	width:'100%',
 });
+
 var actInd = Titanium.UI.createActivityIndicator({
 	top:10,
 	height:50,
@@ -158,18 +159,26 @@ nodeWindowScroll.add(metaTools);
 nodeWindowScroll.add(bodyNode);
 nodeWindowScroll.add(videoLabel);
 nodeWindowScroll.add(whiteSpace);
-//nodeWindowScroll.add(nodeWindowWrapper);
 actInd.show();
 self.add(actInd);	
 self.setTitleControl(logo);
 self.add(nodeWindowScroll);
 self.setRightNavButton(btnRight);	
 
-Ti.App.addEventListener('openNode', function(data){
-	//self.remove(nodeWindowScroll);
-	//nodeWindowScroll.removeAllChildren();
-	//nodeWindowWrapper.removeAllChildren();
+Ti.App.addEventListener('loadNode', function(data){
 	var nid = data.id;
+	// var webview = Ti.UI.createWebView({
+		// width:'100%',
+		// url: 'http://canal10.com.mx/c10app/#/node/'+nid
+	// });
+	// nodeWindowScroll.add(webview);
+	alert(nid);
+
+	//self.remove(nodeWindowScroll);
+	nodeWindowScroll.removeAllChildren();
+	nodeWindowWrapper.removeAllChildren();
+	//alert(nid);
+	
 	Ti.include('lib/getNode.js');
 	getNode(nid);
 });
@@ -205,7 +214,11 @@ Ti.App.addEventListener('addVideoID', function(data){
 //-----------EVENT LISTENER IF CLOSE WINDOW IS CLOSED-------------------//
 self.addEventListener('close', function(e) {
     nodeWindowScroll.removeAllChildren();
-    tools.visible = false;
+    Ti.App.removeEventListener('openNode', function(e){
+	});
+	Ti.App.removeEventListener('loadNode', function(e){
+	});
+    // tools.visible = false;
     Ti.API.info('Close event fired');
 });
 //-----------EVENT LISTENER IF BUTTON SHARE IS TAPPED------------------//
